@@ -1,0 +1,64 @@
+<% layout('boilerPlate') -%>
+
+<div class="container">
+
+  <h1><u>Airline Search Page</u></h1><br>
+
+  <div>
+    <form action="/main/airlineSearch" method="POST">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Flight</span>
+        </div>
+        <input type="text" class="form-control" name="searchData" placeholder="Search Airline Name or Code such as 'OZ','SQ'">
+        <button class="btn btn-dark">Search</button>
+      </div>
+    </form>
+  </div>
+
+  <br><br>
+
+  <% if(typeof filteredData !== 'undefined') { %>
+
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Airline</th>
+        <th scope="col">Code</th>
+        <th scope="col">ICAO</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if(filteredData=='') { %>
+      <tr>
+        <th scope="row">None</th>
+        <td>None</td>
+        <td>None</td>
+        <td>None</td>
+      </tr>
+      <% } %>
+
+
+      <% let i=1 %>
+      <% for(data of filteredData) { %>
+      <tr>
+        <th scope="row"><%=i++%></th>
+        <td><%=data.Name%></td>
+        <td><%=data.Code%></td>
+        <td><%=data.ICAO%></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+  <% } else { %>
+
+  <div class="d-flex justify-content-center"><img src="https://cdn-icons-png.flaticon.com/512/655/655851.png" class="w-50"></div>
+  
+
+
+  <% } %>
+
+      <a href="/main">Back to main</a>
+
+</div>

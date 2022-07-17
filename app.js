@@ -31,19 +31,20 @@ async function main() {
     console.log('mongoose connected');
 }
 
-// Go to main route that has search, search/orderinputdetail
-app.use('/main',mainRouter);
+// Go to main route that has search, search/orderinputdetail, dashboard, and etc.
+app.use('/main', mainRouter);
 
 
 
 // Custom Error Handler (it runs first and it passes err value to the Express dafault handler, or you can stop it here by showing your own err screen)
 app.use((err, req, res, next) => {
     console.log('Hey, you have an error! but I catched it for you :) ');
-    console.log(`Customer Error Catcher said: ${err}`); //only with this, it is regarded as custom error handler since it stops here not passing anything to the Express Default error hanlder
+    console.log(`Customer Error Handler said: (${err})`); //With this, it is regarded as custom error handler since it stops here not passing anything to the Express Default error hanlder
     // res.send('Hey, you have an error! but I catched it for you :) '); // // "res.send" not handled by custom error handler, passed to Express Default Error Handler
     // res.status(500).send(err); // not handled by custom error handler, passed to Express Default Error Handler
     // next(err); // not handled by custom error handler, passed to Express Default Error Handler
-});  
+    res.render('error', { err });
+});
 
 app.listen(3000, () => {
     console.log('Connected to port 3000')

@@ -16,33 +16,36 @@ const catchAsync = require('../utils/catchAsync');
 
 //Go to main entrance page
 router.get('/', (req, res) => {
-    console.log('/main (Get) Route');
+    console.log('');
+    console.log('----------------------------------------');
+    console.log('▼▼▼▼▼ /main (GET) route ▼▼▼▼▼');
+    console.log('----------------------------------------');
     res.render('main');
 });
 
-//GET: Open search page
-//POST: Get data from searchPage and search flight data 'when clicked'.
+//Will show flightSearch.ejs page
 router.route('/search')
-    .get(flights.searchGet)
-    .post(flights.searchPost);
+    .get(flights.searchGet) //GET: Open search page
+    .post(catchAsync(flights.searchPost)); //POST: Get data from searchPage and search flight data 'when clicked'.
 
-//show detail flt info page
+//Will show detail flt order page
 router.route('/search/flight_detail_and_order/:fltApiId')
-    .get(catchAsync(flights.detailFlightGET)) 
-    .post(catchAsync(flights.detailFlightPost));
+    .get(catchAsync(flights.detailFlightGET)) //GET: In the search page, detail order input page will be open when orderinput button clicked.
+    .post(catchAsync(flights.detailFlightPost)); //POST: From detail order input page, it will save data loaded from DB into my mongoDB
 
+//Will show dashboard page
 router.route('/dashboard')
     .get(flights.dashboardGet)
     .post(flights.dashboardPost);
 
+//Will show orderEdit page from dashboard when "Update" button clicked.
 router.route('/dashboard/orderEdit/:orderDbId')
-    .get(flights.orderEditGet) 
-    .post(flights.orderEditPost);
+    .get(flights.orderEditGet) //GET: open orderEdit page
+    .post(flights.orderEditPost); //POST: update data in my mongoDB and redirect to dashboard page
 
 
-// router.use((err, req, res, next) => {
-//     console.log('Hey, you have an error! but I catched it for you :) ');
-//     res.send('Hey, you have an error! but I catched it for you :) ');
-// });
+router.route('/airlineSearch')
+    .get(flights.airlineListGet)
+    .post(flights.airlineListPost); //async, need to use catch async
 
 module.exports = router;
