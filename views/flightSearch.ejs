@@ -1,0 +1,84 @@
+<% layout('boilerPlate') -%>
+
+<div class="container">
+
+  <h1><u>Today's Flight Schedule</u></h1><br>
+
+  <div>
+    <form action="/main/search" method="POST">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Flight</span>
+        </div>
+        <input type="text" class="form-control" name="searchData" placeholder="Search Airline code or Flight #">
+        <button class="btn btn-dark">Search</button>
+      </div>
+    </form>
+  </div>
+
+  <br><br>
+
+  <% if(typeof filteredData !== 'undefined') { %>
+
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Airline</th>
+        <th scope="col">Flight #</th>
+        <th scope="col">Route</th>
+        <th scope="col">AC Type</th>
+        <th scope="col">ICAO</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if(filteredData=='') { %>
+      <tr>
+        <th scope="row">None</th>
+        <td>None</td>
+        <td>None</td>
+        <td>None</td>
+        <td>None</td>
+        <td>None</td>
+        <td>None</td>
+        <td>None</td>
+      </tr>
+      <% } %>
+
+
+      <% let i=1 %>
+      <% for(data of filteredData) { %>
+      <tr>
+        <th scope="row"><%=i++%></th>
+        <td><img src="https://s3.eu-central-1.amazonaws.com/images.flightradar24.com/assets/airlines/logotypes/<%=data.detail.logo.slice(3, 100)%>" alt="airline-logo"></td>
+        <td><%=data.detail.flight%></td>
+        <td><%=data.detail.route%></td>
+        <td><%=data.detail.ac_type%></td>
+        <td><%=data.detail.operator%></td>
+        <td>
+          <form action="#">
+            <button class='btn btn-secondary'>Detail</button>
+          </form>
+        </td>
+        <td>
+          <form action="/main/search/flight_detail_and_order/<%=data.id%>"> <!-- data.id (from API) -->
+            <button class='btn btn-success'>Order Input</button>
+          </form>
+        </td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+  <% } else { %>
+
+  <div class="d-flex justify-content-center"><img src="https://cdn-icons-png.flaticon.com/512/655/655851.png" class="w-50"></div>
+  
+
+
+  <% } %>
+
+  <a href="/main">Back to main</a>
+
+</div>

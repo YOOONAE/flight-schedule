@@ -1,0 +1,85 @@
+<% layout('boilerPlate') -%>
+
+<div class="container">
+
+  <h1><u>Today's Flight Schedule</u></h1><br>
+
+  <form action="/main/dashboard" method="POST">
+    <input type="date" name="date" id="date" value="<%= date %>" class="">
+    <button class="btn btn-dark">Search</button>
+  </form>
+
+  <br><br>
+
+  <% if(typeof foundData !== 'undefined') { %>
+
+  <table class="table" style="text-align:center">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col" rowspan="2">#</th>
+        <th scope="col" rowspan="2">Flight#</th>
+        <th scope="col" colspan="4">PAX CNT</th>
+        <th scope="col" rowspan="2">A/C Type</th>
+        <th scope="col" rowspan="2">ETA</th>
+        <th scope="col" rowspan="2">ETD</th>
+        <th scope="col" rowspan="2">Detail</th>
+      </tr>
+      <tr>
+        <th scope="col">FC</th>
+        <th scope="col">BC</th>
+        <th scope="col">PEY</th>
+        <th scope="col">EY</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if(foundData=='') { %>
+      <tr>
+        <th scope="row">N/A</th>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+      </tr>
+      <% } %>
+
+
+      <% let i=1 %>
+      <% for(data of foundData) { %>
+      <tr>
+        <th scope="row"><%=i++%></th>
+        <!-- input logo img src here -->
+        <td><%=data.details.flight%></td>
+        <td><%=data.fc%></td>
+        <td><%=data.bc%></td>
+        <td><%=data.pey%></td>
+        <td><%=data.ey%></td>
+        <td><%=data.details.acType%></td>
+        <td><%=data.details.arrivalTime%></td>
+        <td><%=data.details.departureTime%></td>
+        <td>
+          <form action="/main/dashboard/orderEdit/<%=data.id%>"> <!-- data.id means the id from db.orders -->
+            <button class='btn btn-success'>Update</button> <!-- Go to data.id route.. and edit     -->
+          </form>
+        </td>
+      </tr>
+      <% } %>
+
+
+    </tbody>
+  </table>
+  <% } else { %>
+
+  <div class="d-flex justify-content-center"><img src="https://cdn-icons-png.flaticon.com/512/655/655851.png" class="w-50"></div>
+
+
+
+  <% } %>
+
+  <a href="/main">Back to main</a>
+
+</div>

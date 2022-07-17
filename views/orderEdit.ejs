@@ -1,0 +1,88 @@
+<% layout('boilerPlate') -%>
+
+<div class="container-fluid d-flex justify-content-center">
+
+  <!--  from here, left side of screen -->
+  <div class="col-5">
+    <h1>Order Update</h1>
+
+    <form action="/main/dashboard/orderEdit/<%= foundData.id %>" method="POST"> <!-- /main/dashboard/orderEdit -->
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Flight #</span>
+        </div>
+        <input type="text" class="form-control" name="order[details][flight]" value="<%= foundData.details.flight%>">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Aircraft</span>
+        </div>
+        <input type="text" class="form-control" name="order[details][acType]" value="<%= foundData.details.acType %>">
+        <input type="text" class="form-control" name="order[details][acTypeDetail]" value="<%= foundData.details.acTypeDetail %>">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Departure</span>
+        </div>
+        <input type="date" class="form-control" name="order[details][departureDate]" value="<%= foundData.details.departureDate %>">
+        <input type="time" class="form-control" name="order[details][departureTime]" value="<%= foundData.details.departureTime %>">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Arrival</span>
+        </div>
+        <input type="date" class="form-control" name="order[details][arrivalDate]" value="<%= foundData.details.arrivalDate %>">
+        <input type="time" class="form-control" name="order[details][arrivalTime]" value="<%= foundData.details.arrivalTime %>">
+      </div>
+
+      <div class="input-group input-group-lsmallg mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Date</span>
+        </div>
+        <input type="date" class="form-control" name="order[date]" value="<%= foundData.date %>">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:300px" id="inputGroup-sizing-lg">First Class (FC)</span>
+        </div>
+        <input type="number" class="form-control" name="order[fc]" value="<%= foundData.fc %>">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:300px" id="inputGroup-sizing-lg">Business Class (BC)</span>
+        </div>
+        <input type="number" class="form-control" name="order[bc]" value="<%= foundData.bc %>">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:300px" id="inputGroup-sizing-lg">P-Economy Class (PEY)</span>
+        </div>
+        <input type="number" class="form-control" name="order[pey]" value="<%= foundData.pey %>">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:300px" id="inputGroup-sizing-lg">Economy Class (EY)</span>
+        </div>
+        <input type="number" class="form-control" name="order[ey]" value="<%= foundData.ey %>">
+      </div>
+
+      <p></p>
+      <div><button class="btn btn-dark p-3 container-fluid">UPDATE DATA</button></div>
+
+    </form>
+
+
+
+  </div>
+
+  <!--  from here, right side of screen -->
+
+</div>

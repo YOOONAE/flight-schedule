@@ -1,0 +1,109 @@
+<% layout('boilerPlate') -%>
+
+<div class="container-fluid d-flex justify-content-center">
+
+  <!--  from here, left side of screen -->
+  <div class="col-5">
+    <h1>Order Input</h1>
+
+    <form action="/main/search/flight_detail_and_order/<%= data.identification.id %>" method="POST">
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Flight #</span>
+        </div>
+        <input type="text" class="form-control" name="order[details][flight]" value="<%= data.identification.number.default%>">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Aircraft</span>
+        </div>
+        <input type="text" class="form-control" name="order[details][acType]" value="<%= data.aircraft.model.code %>">
+        <input type="text" class="form-control" name="order[details][acTypeDetail]" value="<%= data.aircraft.model.text %>">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Departure</span>
+        </div>
+        <input type="date" class="form-control" name="order[details][departureDate]" value="<%= departure.date %>">
+        <input type="time" class="form-control" name="order[details][departureTime]" value="<%= departure.time %>">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Arrival</span>
+        </div>
+        <input type="date" class="form-control" name="order[details][arrivalDate]" value="<%= arrival.date %>">
+        <input type="time" class="form-control" name="order[details][arrivalTime]" value="<%= arrival.time %>">
+      </div>
+
+      <div class="input-group input-group-lsmallg mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Date</span>
+        </div>
+        <input type="date" class="form-control" name="order[date]" value="<%= today.date %>">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:300px" id="inputGroup-sizing-lg">First Class (FC)</span>
+        </div>
+        <input type="number" class="form-control" name="order[fc]">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:300px" id="inputGroup-sizing-lg">Business Class (BC)</span>
+        </div>
+        <input type="number" class="form-control" name="order[bc]">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:300px" id="inputGroup-sizing-lg">P-Economy Class (PEY)</span>
+        </div>
+        <input type="number" class="form-control" name="order[pey]">
+      </div>
+
+      <div class="input-group input-group-small mb-2">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="width:300px" id="inputGroup-sizing-lg">Economy Class (EY)</span>
+        </div>
+        <input type="number" class="form-control" name="order[ey]">
+      </div>
+
+      <p></p>
+      <div><button class="btn btn-dark p-3 container-fluid">SUBMIT DATA</button></div>
+
+    </form>
+
+
+
+  </div>
+
+  <!--  from here, right side of screen -->
+  <div class="col-5">
+
+    <h1><%= data.identification.number.default%> - Flight Schedule</h1>
+
+    <div class="card text">
+      <div class="card-body">
+        <h5 class="card-title">Detail Information (id: <%= data.identification.id%>)</h5>
+        <p class="card-text"><b>Airline</b> : <%= data.airline.name %></p>
+        <p class="card-text"><b>Aircraft</b> : <%= data.aircraft.model.code %> / <%= data.aircraft.model.text %></p>
+        <p class="card-text"><b>Origin</b> : <%= data.airport.origin.name %></p>
+        <p class="card-text"><b>Destination</b> : <%= data.airport.destination.name %></p>
+        <p class="card-text"><b>Scheduled Departure</b> : <%= departure.date %> / <%= departure.time %> </p>
+        <p class="card-text"><b>Scheduled Arrival</b> : <%= arrival.date %> / <%= arrival.time %> </p>
+      </div>
+      <div class="card-footer text-muted">
+        <a href="/main">Back to main</a>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>

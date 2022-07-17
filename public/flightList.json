@@ -1,0 +1,85 @@
+{
+    "results": [
+        {
+            "id": "SIA",
+            "label": "Singapore Airlines (SIA / SQ)",
+            "detail": {
+                "iata": "SQ",
+                "logo": "s3:SQ_SIA.png"
+            },
+            "type": "operator",
+            "match": "iata",
+            "name": "Singapore Airlines"
+        },
+        {
+            "id": "2c81f374",
+            "label": "SQ38 / SIA38 / A359 (9V-SMZ)",
+            "detail": {
+                "lat": 46.9,
+                "lon": 177.6,
+                "schd_from": "SIN",
+                "schd_to": "LAX",
+                "ac_type": "A359",
+                "route": "Singapore (SIN) ⟶ Los Angeles (LAX)",
+                "logo": "s3:SQ_SIA.png",
+                "reg": "9V-SMZ",
+                "callsign": "SIA38",
+                "flight": "SQ38",
+                "operator": "SIA"
+            },
+            "type": "live",
+            "match": "begins"
+        },
+        {
+            "id": "SQ38",
+            "label": "SQ38 / SIA38",
+            "detail": {
+                "logo": "s3:SQ_SIA.png",
+                "callsign": "SIA38",
+                "flight": "SQ38",
+                "operator": "SIA"
+            },
+            "type": "schedule",
+            "match": "begins"
+        },
+        {
+            "id": "SQ387",
+            "label": "SQ387",
+            "detail": {
+                "logo": "s3:SQ_SIA.png",
+                "flight": "SQ387",
+                "operator": "SIA"
+            },
+            "type": "schedule",
+            "match": "begins"
+        },
+        {
+            "id": "SQ388",
+            "label": "SQ388",
+            "detail": {
+                "logo": "s3:SQ_SIA.png",
+                "flight": "SQ388",
+                "operator": "SIA"
+            },
+            "type": "schedule",
+            "match": "begins"
+        }
+    ],
+    "stats": {
+        "total": {
+            "all": 5,
+            "airport": 0,
+            "operator": 1,
+            "live": 1,
+            "schedule": 3,
+            "aircraft": 0
+        },
+        "count": {
+            "airport": 0,
+            "operator": 1,
+            "live": 1,
+            "schedule": 3,
+            "aircraft": 0
+        }
+    }
+}
