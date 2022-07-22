@@ -1,64 +1,95 @@
 <% layout('boilerPlate') -%>
 
-<div class="container">
+<div class="container-fluid d-flex justify-content-center">
 
-  <h1><u>Airline Search Page</u></h1><br>
+  <!-- left page -->
+  <div class="col-6">
 
-  <div>
-    <form action="/main/airlineSearch" method="POST">
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="basic-addon1">Flight</span>
+    <h1><u>Airline Search Page</u></h1><br>
+
+    <div>
+      <form action="/main/airlineSearch" method="GET">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Flight</span>
+          </div>
+          <input type="text" class="form-control" name="searchData" placeholder="Search Airline Name or Code such as 'OZ','SQ'">
+          <button class="btn btn-dark">Search</button>
         </div>
-        <input type="text" class="form-control" name="searchData" placeholder="Search Airline Name or Code such as 'OZ','SQ'">
-        <button class="btn btn-dark">Search</button>
-      </div>
-    </form>
+      </form>
+    </div>
+
+    <br><br>
+
+    <% if(typeof filteredData !== 'undefined') { %>
+
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Airline</th>
+          <th scope="col">Code</th>
+          <th scope="col">ICAO</th>
+          <th scope="col">Airline Master</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if(filteredData=='') { %>
+        <tr>
+          <th scope="row">None</th>
+          <td>None</td>
+          <td>None</td>
+          <td>None</td>
+          <td>None</td>
+        </tr>
+        <% } %>
+
+        <% let i=1 %>
+        <% for(data of filteredData) { %>
+        <tr>
+          <th scope="row"><%=i++%></th>
+          <td><%=data.Name%></td>
+          <td><%=data.Code%></td>
+          <td><%=data.ICAO%></td>
+          <td>
+            <form action="/main/airlineSearch" method="POST">
+              <button class='btn btn-success'>Add</button>
+            </form>
+          </td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+    <% } else { %>
+    <div class="d-flex justify-content-center"><img src="https://cdn-icons-png.flaticon.com/512/655/655851.png" class="w-50"></div>
+    <% } %>
+    <a href="/main">Back to main</a>
+
   </div>
 
-  <br><br>
+  <!-- right page -->
+  <div class="col-4">
+    <h1><u>Airline List (DB)</u></h1><br>
+    <div class="mb-3">The airlines below are saved in the Master Data Base.</div>
 
-  <% if(typeof filteredData !== 'undefined') { %>
+    <% for(airline of airlineList) { %>
+    <div class="card mb-3" style="">
+      <div class="row no-gutters">
+        <div class="col-md-4 d-flex align-self-center justify-content-center">
+          <img src="<%=airline.logo%>" alt="logo_img">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title"><%=airline.airline%></h5>
+            <p class="card-text"><b>ICAO:</b> <%=airline.icao%> / <b>CODE:</b> <%=airline.code%></p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-  <table class="table">
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Airline</th>
-        <th scope="col">Code</th>
-        <th scope="col">ICAO</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% if(filteredData=='') { %>
-      <tr>
-        <th scope="row">None</th>
-        <td>None</td>
-        <td>None</td>
-        <td>None</td>
-      </tr>
-      <% } %>
-
-
-      <% let i=1 %>
-      <% for(data of filteredData) { %>
-      <tr>
-        <th scope="row"><%=i++%></th>
-        <td><%=data.Name%></td>
-        <td><%=data.Code%></td>
-        <td><%=data.ICAO%></td>
-      </tr>
-      <% } %>
-    </tbody>
-  </table>
-  <% } else { %>
-
-  <div class="d-flex justify-content-center"><img src="https://cdn-icons-png.flaticon.com/512/655/655851.png" class="w-50"></div>
-  
+    <% } %>
 
 
-  <% } %>
-
-      <a href="/main">Back to main</a>
+  </div>
 
 </div>

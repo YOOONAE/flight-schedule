@@ -23,6 +23,7 @@ app.use(express.urlencoded({ extended: true }))
 
 // Routing setting
 const mainRouter = require('./routes/mainRouter');
+const { search } = require('./routes/mainRouter');
 
 //Connect Mongoose to Express
 main().catch(err => console.log(err)); //Hoisting? if error happens in connecting mongo DB, it will show you an error msg
@@ -34,6 +35,23 @@ async function main() {
 // Go to main route that has search, search/orderinputdetail, dashboard, and etc.
 app.use('/main', mainRouter);
 
+
+
+// app.get('/test', (req, res) => {
+    
+//     const { searchData, extraData } = req.query;
+//     console.log(`req.query: ${req.query}`);
+//     console.log(`searchData: ${searchData}`);
+//     // console.log(`extraData: ${extraData}`);
+
+//     if (searchData) {
+//         console.log('**** Data exist !!');
+//         res.render('test', { searchData });
+//     } else {
+//         console.log('**** No Data')
+//         res.render('test', { searchData });
+//     }
+// })
 
 
 // Custom Error Handler (it runs first and it passes err value to the Express dafault handler, or you can stop it here by showing your own err screen)

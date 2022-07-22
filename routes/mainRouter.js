@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
 
 //Will show flightSearch.ejs page
 router.route('/search')
-    .get(flights.searchGet) //GET: Open search page
+    .get(catchAsync(flights.searchGet)) //GET: Open search page
     .post(catchAsync(flights.searchPost)); //POST: Get data from searchPage and search flight data 'when clicked'.
 
 //Will show detail flt order page
@@ -47,5 +47,9 @@ router.route('/dashboard/orderEdit/:orderDbId')
 router.route('/airlineSearch')
     .get(flights.airlineListGet)
     .post(flights.airlineListPost); //async, need to use catch async
+
+
+
+//airlineSearch + /:id 이런식으로 할 방법 없는지?
 
 module.exports = router;

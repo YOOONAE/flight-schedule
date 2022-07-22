@@ -52,6 +52,46 @@ module.exports.detailFlightLoadFromDB = async function (fltApiId) {
 
 }
 
+module.exports.flightOperatorLoadDB = async function (searchData) {
+    const options = {
+        method: 'GET',
+        // url: 'https://flight-radar1.p.rapidapi.com/flights/search',
+        params: { query: searchData, limit: '25' },
+        headers: {
+            'X-RapidAPI-Key': process.env.API_KEY,
+            'X-RapidAPI-Host': 'flight-radar1.p.rapidapi.com'
+        }
+    };
+
+
+    // update the below code to be able to receive two parameters; searchData and flightType
+    // or create new one for operator only to get logo img
+    return filteredData = await axios.request(options)
+        .then(function (response) {
+            const { results } = response.data;
+            console.log(`searchData : ${searchData}`);
+
+            const filters = { type: 'operator' }
+            // If one of the values matches "filters", then it returns True and the very element(object) at that moment.
+            // It's like OR condition.
+            return results.filter(data => {
+                for (let key in filters) {
+                    if (data[key] === filters[key]) return true;
+                }
+                return false;
+            })
+
+        }).catch(function (error) {
+            console.log('*********  Fake Data Loaded *******');
+            return fakeDBList.listData.results.filter(data => {
+                if (data.type === 'live') return true; //filter.type으로 변경해서 사용..
+                return false;
+            });
+        });
+};
+
+
+
 module.exports.flightListLoadFromDB = async function (searchData) {
     const options = {
         method: 'GET',
@@ -63,33 +103,30 @@ module.exports.flightListLoadFromDB = async function (searchData) {
         }
     };
 
-    return await axios.request(options)
+
+    // update the below code to be able to receive two parameters; searchData and flightType
+    // or create new one for operator only to get logo img
+    return filteredData = await axios.request(options)
         .then(function (response) {
             const { results } = response.data;
             console.log(`searchData : ${searchData}`);
 
             const filters = { type: 'live' }
-
             // If one of the values matches "filters", then it returns True and the very element(object) at that moment.
             // It's like OR condition.
-            const filteredData = results.filter(data => {
-                for (let key in filters) { if (data[key] === filters[key]) return true; }
+            return results.filter(data => {
+                for (let key in filters) {
+                    if (data[key] === filters[key]) return true;
+                }
                 return false;
             })
 
-            console.log('*********  Real Data from DB and it shows "filtered Data" below *******');
-            console.log(filteredData);
-            return filteredData;
-
         }).catch(function (error) {
-            const filteredData = fakeDBList.listData.results.filter(data => {
-                if (data.type === 'live') return true;
+            console.log('*********  Fake Data and it shows "filtered Data" below *******');
+            return fakeDBList.listData.results.filter(data => {
+                if (data.type === 'live') return true; //filter.type으로 변경해서 사용..
                 return false;
             });
-
-            console.log('*********  Fake Data and it shows "filtered Data" below *******');
-            console.log(filteredData);
-            return filteredData;
         });
 };
 
@@ -109,7 +146,7 @@ module.exports.airlineListLoadFromDB = async function () {
         // console.log(response.data);
         console.log('**Real data loaded')
         return response.data
-        
+
     }).catch(function (error) {
         console.log('**Fake data loaded')
         const data = fakeDBList.airlineList;
