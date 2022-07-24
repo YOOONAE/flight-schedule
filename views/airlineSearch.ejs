@@ -5,7 +5,7 @@
   <!-- left page -->
   <div class="col-6">
 
-    <h1><u>Airline Search Page</u></h1><br>
+    <h1>Airline Search Page</h1><br>
 
     <div>
       <form action="/main/airlineSearch" method="GET">
@@ -47,14 +47,14 @@
         <% let i=1 %>
         <% for(data of filteredData) { %>
         <tr>
-          <th scope="row"><%=i++%></th>
-          <td><%=data.Name%></td>
-          <td><%=data.Code%></td>
-          <td><%=data.ICAO%></td>
-          <td>
-            <form action="/main/airlineSearch" method="POST">
+          <form action="/main/airlineSearch" method="POST">
+            <th scope="row"><%=i++%></th>
+            <td><input type="text" name="data[airline]" value="<%=data.Name%>" readonly style="border:none"></td>
+            <td><input type="text" name="data[code]" value="<%=data.Code%>" readonly style="border:none"></td>
+            <td><input type="text" name="data[icao]" value="<%=data.ICAO%>" readonly style="border:none"></td>
+            <td>
               <button class='btn btn-success'>Add</button>
-            </form>
+          </form>
           </td>
         </tr>
         <% } %>
@@ -69,7 +69,7 @@
 
   <!-- right page -->
   <div class="col-4">
-    <h1><u>Airline List (DB)</u></h1><br>
+    <h1>Airline List (DB)</h1><br>
     <div class="mb-3">The airlines below are saved in the Master Data Base.</div>
 
     <% for(airline of airlineList) { %>

@@ -10,9 +10,10 @@
 
       <div class="input-group input-group-small mb-2">
         <div class="input-group-prepend">
-          <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Flight #</span>
+          <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Flight # / ICAO</span>
         </div>
-        <input type="text" class="form-control" name="order[details][flight]" value="<%= data.identification.number.default%>">
+        <input type="text" class="form-control" name="order[details][flight]" value="<%= data.identification.number.default%>" readonly>
+        <input type="text" class="form-control" name="icao" value="<%=foundAirline.icao%>" readonly>
       </div>
 
       <div class="input-group input-group-small mb-2">
@@ -91,6 +92,7 @@
     <div class="card text">
       <div class="card-body">
         <h5 class="card-title">Detail Information (id: <%= data.identification.id%>)</h5>
+        <p><img src="<%=foundAirline.logo%>" alt="logo_img"></p>
         <p class="card-text"><b>Airline</b> : <%= data.airline.name %></p>
         <p class="card-text"><b>Aircraft</b> : <%= data.aircraft.model.code %> / <%= data.aircraft.model.text %></p>
         <p class="card-text"><b>Origin</b> : <%= data.airport.origin.name %></p>

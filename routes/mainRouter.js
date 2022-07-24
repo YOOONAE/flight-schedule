@@ -36,7 +36,7 @@ router.route('/search/flight_detail_and_order/:fltApiId')
 //Will show dashboard page
 router.route('/dashboard')
     .get(flights.dashboardGet)
-    .post(flights.dashboardPost);
+    // .post(flights.dashboardPost);
 
 //Will show orderEdit page from dashboard when "Update" button clicked.
 router.route('/dashboard/orderEdit/:orderDbId')

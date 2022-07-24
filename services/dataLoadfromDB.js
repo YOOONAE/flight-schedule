@@ -142,15 +142,16 @@ module.exports.airlineListLoadFromDB = async function () {
         }
     };
 
-    return await axios.request(options).then(function (response) {
-        // console.log(response.data);
-        console.log('**Real data loaded')
-        return response.data
+    return await axios.request(options)
+        .then(function (response) {
+            // console.log(response.data);
+            console.log('**Real data loaded')
+            return response.data
 
-    }).catch(function (error) {
-        console.log('**Fake data loaded')
-        const data = fakeDBList.airlineList;
-        return data;
-        // console.error(error);
-    });
+        }).catch(function (error) {
+            console.log('**Fake data loaded')
+            const data = fakeDBList.airlineList;
+            return data;
+            // console.error(error);
+        });
 }

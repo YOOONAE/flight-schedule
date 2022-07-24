@@ -4,24 +4,18 @@ const Airline = require('../models/airline')
 const loadDB = require('../services/dataLoadfromDB');  //Services to load DB
 const title = require('../utils/title');
 
-// module.exports.
 
-
-// [GET] /main/airlineSearch
+// [GET] /main/airlineSearch. Open airline search page.
+// If it has searchData from req.query, it searches airline information on the same page.
 module.exports.airlineListGet = async function (req, res) {
     title('main/airlineSearch (GET) route');
-    console.log('req.query::::::::::');
-    console.log(req.query); //이거 작동법 알았으니, 검색을 이걸로. post로 하지말고. post는 데이터 저장에 사용해볼것.
     const { searchData } = req.query;
     let filteredData = '';
 
     // airline searching logic
     if (searchData) {
         const data = await loadDB.airlineListLoadFromDB();
-
-        console.log(data);
         const airlines = data.rows;
-
         // searching logic (startwith, endwith, include, ...)
         filteredData = airlines.filter((el) => {
             if (
@@ -39,34 +33,30 @@ module.exports.airlineListGet = async function (req, res) {
         console.log(filteredData)
 
     } else {
-        // res.render('airlineSearch');
         console.log('no searched data')
     }
 
     //Load airline list saved in my DB
     const airlineList = await Airline.find({});
-    console.log(airlineList);
-    
+
     res.render('airlineSearch', { filteredData, airlineList });
 };
 
 
-// [POST] /main/airlineSearch
+// [POST] /main/airlineSearch : when you click add button to add airline to the master database,
+// it will add the information you selected into the master db along with logo img for the airline.
 module.exports.airlineListPost = async function (req, res) {
     title('/main/airlineSearch (POST) route');
-    console.log(data); /// Form위에 있는 data에서.. form은 전체 페이지값을 보내나..? 이건 어떻게 보내지는거지?  **
+    const { data } = req.body;
+    console.log(`req.body.data === `);
+    console.log(data);
 
-    const savedData = await new Airline({
-        airline: data.Name,
-        code: data.Code,
-        icao: data.ICAO
-    });
+    const savedData = await new Airline(data);
 
-    const foundData = await loadDB.flightOperatorLoadDB(data.Name);
+    const foundData = await loadDB.flightOperatorLoadDB(data.airline);
     const logo = 'https://s3.eu-central-1.amazonaws.com/images.flightradar24.com/assets/airlines/logotypes/' + foundData[0].detail.logo.slice(3, 100);
     savedData.logo = logo;
-    savedData.save();
-    await savedData;
+    await savedData.save();
 
     console.log(savedData);
 
@@ -75,7 +65,8 @@ module.exports.airlineListPost = async function (req, res) {
 };
 
 
-// [GET] main/search : open search page.
+// [GET] main/search //: Open search page. 
+// Also, if there is searchData via GET route with query data, it searches flt info for today.
 module.exports.searchGet = async function (req, res) {
     title('/main/search (Get) Route');
     console.log(`req.query:`);
@@ -94,48 +85,65 @@ module.exports.searchGet = async function (req, res) {
     }
 }
 
-// [POST] main/search : When search button clicked, it loads data via API (or FakeDB)
 // from flightSearch.ejs
-module.exports.searchPost = async function (req, res) {
-    title('/main/search (Post) Route');
-
-    //need to add a new feature here for the app.
-
-    // const { searchData } = req.body;
-    // res.render('flightSearch', { filteredData });
-    res.render('flightSearch');
-};
+// module.exports.searchPost = async function (req, res) {
+//     title('/main/search (Post) Route');
+//     res.render('flightSearch');
+// };
 
 
-// [GET] main/search/flight_detail_and_order/:fltApiId : To show detailed flight information along with order input, loading api data for the flight detailed info.
+// [GET] main/search/flight_detail_and_order/:fltApiId 
+// : To show detailed flight information along with order input, loading api data for the flight detailed info.
 module.exports.detailFlightGET = async (req, res, next) => {
     title('/main/search/flight_detail_and_order/:fltApiId (GET) Route');
 
     const { fltApiId } = req.params;
     const { data, departure, arrival, today } = await loadDB.detailFlightLoadFromDB(fltApiId);
-    res.render('flightDetail', { data, departure, arrival, today });
+    const { icao } = data.airline.code;
+    const foundAirline = await Airline.findOne({icao});
+
+    // It would be better if this part has pop up screen here to let people know what just happend.
+    if (!foundAirline == '') {
+        console.log('The airline for the selected flight exists in the master DB! :)')
+    } else {
+        console.log('No airline data exists in the master DB :(, please add the airline to the Master DB');
+        return res.redirect('/main/airlineSearch');
+    }
+
+    res.render('flightDetail', { data, departure, arrival, today, foundAirline });
 }
 
 
-// [POST] main/search/flight_detail_and_order/:fltApiId 
-// from flightDetail.ejs
+// [POST] main/search/flight_detail_and_order/:fltApiId  (from flightDetail.ejs)
+// Once you click 'submit data' button, the below function will work to save order information along with airline info.
+// In here, it needs to connect this data with the master airline data (new feature)***7/23
 module.exports.detailFlightPost = async (req, res) => {
     title('/main/search/flight_detail_and_order/:fltApiId (POST) Route');
+    
+    // Need to streamline data here..
+
+    console.log('REQ.BODY data && AIRLINE data below');
     console.log(req.body);
     const { fltApiId } = req.params;
     console.log(`API flt data id : ${fltApiId}`);
     const { fc, bc, pey, ey, date, details } = req.body.order;
     details.fltApiId = fltApiId;
 
-    const flt = await Order.insertMany({ fc, bc, pey, ey, date, details });
+    const {icao} = req.body;
+    const found = await Airline.findOne({icao});
+    console.log('airline...');
+    console.log(found);
 
-    // : Date.parse(date)
+    const flt = await new Order({fc, bc, pey, ey, date, details, airline: found._id});
+    flt.save();
+
     console.log('saved data is as follows ▼▼▼▼▼');
     console.log(flt);
 
     res.redirect('/main/dashboard'); // full address needed to be redirected to the right place you want
 };
 
+//To show order edit page
 module.exports.orderEditGet = async (req, res) => {
     title('/main/dashboard/orderEdit (GET) route');
     const { orderDbId } = req.params;
@@ -149,6 +157,7 @@ module.exports.orderEditGet = async (req, res) => {
     // res.render('orderEdit');
 };
 
+//To save edited order information
 module.exports.orderEditPost = async (req, res) => {
     title('/main/dashboard/orderEdit (POST) route');
     const { orderDbId } = req.params;
@@ -162,27 +171,36 @@ module.exports.orderEditPost = async (req, res) => {
 };
 
 // [GET] main/dashboard  
+// To show all the order information along with airline info for the day.
 module.exports.dashboardGet = async (req, res, next) => {
     title('/main/dashboard (GET) route');
 
-    let date = new Date(); // get today's date
-    let dd = String(date.getDate()).padStart(2, '0');
-    let mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
-    let yyyy = date.getFullYear();
-    date = yyyy + '-' + mm + '-' + dd;
-    const foundData = await Order.find({ date });
+    let foundData ='';    
+    let {date} = req.query;
+    
+    if(!req.query.date==''){
+        console.log('There is searched Date');
+        foundData = await Order.find({date}).populate('airline');
+    } else {
+        console.log('Today date');
+        date = new Date(); // get today's date
+        let dd = String(date.getDate()).padStart(2, '0');
+        let mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = date.getFullYear();
+        date = yyyy + '-' + mm + '-' + dd;
+        foundData = await Order.find({ date }).populate('airline');
+    }
+
+    console.log(foundData); // populate를..  ejs에서 해야할..듯? 여기선 배열로 결과 리턴하니까?
+    //대시보드 ejs가면 거기서 반복문..있으니?
 
     res.render('dashBoard', { foundData, date });
 };
 
-module.exports.dashboardPost = async (req, res) => {
-    title('/main/dashboard (POST) route');
-
-    const { date } = req.body;
-    const foundData = await Order.find({ date });
-    // console.log('foundData');
-    // console.log(foundData);
-    res.render('dashBoard', { foundData, date });
-};
+// I think it doesn't need be POST route. plz use GET route by using search data from the same page.
+// module.exports.dashboardPost = async (req, res) => {
+//     title('/main/dashboard (POST) route');
+//     res.render('dashBoard', { foundData, date });
+// };
 
 // module.exports.

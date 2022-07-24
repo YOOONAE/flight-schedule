@@ -4,7 +4,7 @@
 
   <h1><u>Today's Flight Schedule</u></h1><br>
 
-  <form action="/main/dashboard" method="POST">
+  <form action="/main/dashboard" method="GET">
     <input type="date" name="date" id="date" value="<%= date %>" class="">
     <button class="btn btn-dark">Search</button>
   </form>
@@ -13,10 +13,12 @@
 
   <% if(typeof foundData !== 'undefined') { %>
 
-  <table class="table" style="text-align:center">
+  <table class="table">
     <thead class="thead-dark">
       <tr>
         <th scope="col" rowspan="2">#</th>
+        <th scope="col" rowspan="2" colspan="2">Airline</th>
+        <th scope="col" rowspan="2">ICAO</th>
         <th scope="col" rowspan="2">Flight#</th>
         <th scope="col" colspan="4">PAX CNT</th>
         <th scope="col" rowspan="2">A/C Type</th>
@@ -44,6 +46,9 @@
         <td>N/A</td>
         <td>N/A</td>
         <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
+        <td>N/A</td>
       </tr>
       <% } %>
 
@@ -53,6 +58,9 @@
       <tr>
         <th scope="row"><%=i++%></th>
         <!-- input logo img src here -->
+        <td><img src="<%=data.airline.logo%>" alt="logo_img"></td>
+        <td><%=data.airline.airline%></td>
+        <td><%=data.airline.icao%></td>
         <td><%=data.details.flight%></td>
         <td><%=data.fc%></td>
         <td><%=data.bc%></td>
