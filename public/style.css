@@ -1,8 +1,13 @@
 .table {
     text-align:center
+    
 }
 
 
-td{
+tr{
+    
+}
+
+td{ 
     vertical-align: middle;
 }

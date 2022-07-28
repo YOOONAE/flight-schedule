@@ -73,17 +73,53 @@ module.exports.searchGet = async function (req, res) {
     console.log(req.query)
     const { searchData } = req.query;
     let filteredData = '';
+    let detailData;
 
     if (searchData) {
         console.log('Searched data exists, so it searches database');
         // API data load via the service that I created
         filteredData = await loadDB.flightListLoadFromDB(searchData);
-        res.render('flightSearch', { filteredData });
+
+        // filteredData has lots of fltApiId... loop the IDs and when it finds the matched one with detail flt id,
+        // then, it saves the found data to be pushed into the filtered data.
+
+        for(let i=0; i<filteredData.length; i++) {
+            detailData = await loadDB.detailFlightLoadFromDB(filteredData[i].id);
+            if(filteredData[i].id == detailData.data.identification.id) {
+                
+                const flightInfo = {
+                    origin : detailData.data.airport.origin.name,
+                    destination: detailData.data.airport.destination.name,
+                    departure: detailData.data.time.scheduled.departure,
+                    arrival: detailData.data.time.scheduled.arriaval
+                }
+                // ***** Question!!!!! 1)
+
+                Object.assign(filteredData[i],flightInfo)
+
+                // airport.origin.name | airport.destination.name | 
+                // time.scheduled.departure | time.scheduled.arrival
+                // aircraft.model.code || aircraft.model.text || aircraft.registration.
+
+                console.log('Match, saved it')
+                console.log(filteredData[i].origin);
+            }
+        }
+        // res.render('flightSearch', { filteredData });
     } else {
         console.log('No data from Search, no searching.');
-        res.render('flightSearch', { filteredData });
+        // res.render('flightSearch', { filteredData });
     }
+
+    // filteredData.fltDetails = filteredDetailData
+
+    console.log(filteredData);
+    console.log('--------========*********_----=====')
+    // console.log(filteredDetailData)
+
+    res.render('flightSearch', { filteredData });
 }
+
 
 // from flightSearch.ejs
 // module.exports.searchPost = async function (req, res) {
@@ -100,7 +136,7 @@ module.exports.detailFlightGET = async (req, res, next) => {
     const { fltApiId } = req.params;
     const { data, departure, arrival, today } = await loadDB.detailFlightLoadFromDB(fltApiId);
     const { icao } = data.airline.code;
-    const foundAirline = await Airline.findOne({icao});
+    const foundAirline = await Airline.findOne({ icao });
 
     // It would be better if this part has pop up screen here to let people know what just happend.
     if (!foundAirline == '') {
@@ -109,6 +145,8 @@ module.exports.detailFlightGET = async (req, res, next) => {
         console.log('No airline data exists in the master DB :(, please add the airline to the Master DB');
         return res.redirect('/main/airlineSearch');
     }
+
+    console.log(data);
 
     res.render('flightDetail', { data, departure, arrival, today, foundAirline });
 }
@@ -119,7 +157,7 @@ module.exports.detailFlightGET = async (req, res, next) => {
 // In here, it needs to connect this data with the master airline data (new feature)***7/23
 module.exports.detailFlightPost = async (req, res) => {
     title('/main/search/flight_detail_and_order/:fltApiId (POST) Route');
-    
+
     // Need to streamline data here..
 
     console.log('REQ.BODY data && AIRLINE data below');
@@ -129,12 +167,12 @@ module.exports.detailFlightPost = async (req, res) => {
     const { fc, bc, pey, ey, date, details } = req.body.order;
     details.fltApiId = fltApiId;
 
-    const {icao} = req.body;
-    const found = await Airline.findOne({icao});
+    const { icao } = req.body;
+    const found = await Airline.findOne({ icao });
     console.log('airline...');
     console.log(found);
 
-    const flt = await new Order({fc, bc, pey, ey, date, details, airline: found._id});
+    const flt = await new Order({ fc, bc, pey, ey, date, details, airline: found._id });
     flt.save();
 
     console.log('saved data is as follows ▼▼▼▼▼');
@@ -175,12 +213,12 @@ module.exports.orderEditPost = async (req, res) => {
 module.exports.dashboardGet = async (req, res, next) => {
     title('/main/dashboard (GET) route');
 
-    let foundData ='';    
-    let {date} = req.query;
-    
-    if(!req.query.date==''){
+    let foundData = '';
+    let { date } = req.query;
+
+    if (!req.query.date == '') {
         console.log('There is searched Date');
-        foundData = await Order.find({date}).populate('airline');
+        foundData = await Order.find({ date }).populate('airline');
     } else {
         console.log('Today date');
         date = new Date(); // get today's date
