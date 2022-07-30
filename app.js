@@ -9,6 +9,16 @@ const path = require('path');
 const axios = require('axios');
 const engine = require('ejs-mate');
 
+// Session settings
+const session = require('express-session');
+const sessionConfig = {
+    secret: 'myfirstflightapp',
+    resave: false,
+    saveUninitialized: true
+};
+app.use(session(sessionConfig));
+
+
 //mongo DB models
 const mongoose = require('mongoose');
 // const Order = require('./models/order');
@@ -32,26 +42,12 @@ async function main() {
     console.log('mongoose connected');
 }
 
+app.use((req, res, next) => {
+    next();
+})
+
 // Go to main route that has search, search/orderinputdetail, dashboard, and etc.
 app.use('/main', mainRouter);
-
-
-
-// app.get('/test', (req, res) => {
-    
-//     const { searchData, extraData } = req.query;
-//     console.log(`req.query: ${req.query}`);
-//     console.log(`searchData: ${searchData}`);
-//     // console.log(`extraData: ${extraData}`);
-
-//     if (searchData) {
-//         console.log('**** Data exist !!');
-//         res.render('test', { searchData });
-//     } else {
-//         console.log('**** No Data')
-//         res.render('test', { searchData });
-//     }
-// })
 
 
 // Custom Error Handler (it runs first and it passes err value to the Express dafault handler, or you can stop it here by showing your own err screen)

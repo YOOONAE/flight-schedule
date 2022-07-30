@@ -9,6 +9,7 @@ const title = require('../utils/title');
 // If it has searchData from req.query, it searches airline information on the same page.
 module.exports.airlineListGet = async function (req, res) {
     title('main/airlineSearch (GET) route');
+
     const { searchData } = req.query;
     let filteredData = '';
 
@@ -69,11 +70,13 @@ module.exports.airlineListPost = async function (req, res) {
 // Also, if there is searchData via GET route with query data, it searches flt info for today.
 module.exports.searchGet = async function (req, res) {
     title('/main/search (Get) Route');
+
     console.log(`req.query:`);
     console.log(req.query)
     const { searchData } = req.query;
     let filteredData = '';
     let detailData;
+
 
     if (searchData) {
         console.log('Searched data exists, so it searches database');
@@ -83,19 +86,19 @@ module.exports.searchGet = async function (req, res) {
         // filteredData has lots of fltApiId... loop the IDs and when it finds the matched one with detail flt id,
         // then, it saves the found data to be pushed into the filtered data.
 
-        for(let i=0; i<filteredData.length; i++) {
+        for (let i = 0; i < filteredData.length; i++) {
             detailData = await loadDB.detailFlightLoadFromDB(filteredData[i].id);
-            if(filteredData[i].id == detailData.data.identification.id) {
-                
+            if (filteredData[i].id == detailData.data.identification.id) {
+
                 const flightInfo = {
-                    origin : detailData.data.airport.origin.name,
+                    origin: detailData.data.airport.origin.name,
                     destination: detailData.data.airport.destination.name,
                     departure: detailData.data.time.scheduled.departure,
                     arrival: detailData.data.time.scheduled.arriaval
                 }
                 // ***** Question!!!!! 1)
 
-                Object.assign(filteredData[i],flightInfo)
+                Object.assign(filteredData[i], flightInfo)
 
                 // airport.origin.name | airport.destination.name | 
                 // time.scheduled.departure | time.scheduled.arrival
@@ -172,8 +175,16 @@ module.exports.detailFlightPost = async (req, res) => {
     console.log('airline...');
     console.log(found);
 
-    const flt = await new Order({ fc, bc, pey, ey, date, details, airline: found._id });
-    flt.save();
+    let flt = '';
+
+    try {
+        flt = await new Order({ fc, bc, pey, ey, date, details, airline: found._id });
+        flt.save();
+    } catch (e) {
+        console.log(e);
+        throw new Error(e);
+    }
+
 
     console.log('saved data is as follows ▼▼▼▼▼');
     console.log(flt);
@@ -229,8 +240,7 @@ module.exports.dashboardGet = async (req, res, next) => {
         foundData = await Order.find({ date }).populate('airline');
     }
 
-    console.log(foundData); // populate를..  ejs에서 해야할..듯? 여기선 배열로 결과 리턴하니까?
-    //대시보드 ejs가면 거기서 반복문..있으니?
+    // console.log(foundData);
 
     res.render('dashBoard', { foundData, date });
 };

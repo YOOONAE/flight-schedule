@@ -1,13 +1,26 @@
-.table {
-    text-align:center
-    
-}
 
-
-tr{
-    
-}
-
-td{ 
+.table td{ 
+    text-align: center;
     vertical-align: middle;
+}
+
+.table th{ 
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+.tooltip {
+    color:violet;
+    background-color: yellowgreen;
+}
+
+div.invalid-feedback { 
+    text-align: right;
+}
+
+div.invalid-tooltip { 
+    transform: rotate(-3deg);
+    position: relative;
+    left: 20px;
 }

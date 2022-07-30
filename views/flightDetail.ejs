@@ -6,7 +6,7 @@
   <div class="col-5">
     <h1>Order Input</h1>
 
-    <form action="/main/search/flight_detail_and_order/<%= data.identification.id %>" method="POST">
+    <form action="/main/search/flight_detail_and_order/<%= data.identification.id %>" method="POST" class="needs-validation" novalidate>
 
       <div class="input-group input-group-small mb-2">
         <div class="input-group-prepend">
@@ -20,68 +20,71 @@
         <div class="input-group-prepend">
           <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Aircraft</span>
         </div>
-        <input type="text" class="form-control" name="order[details][acType]" value="<%= data.aircraft.model.code %>">
-        <input type="text" class="form-control" name="order[details][acTypeDetail]" value="<%= data.aircraft.model.text %>">
+        <input type="text" class="form-control" name="order[details][acType]" value="<%= data.aircraft.model.code %>" required>
+        <input type="text" class="form-control" name="order[details][acTypeDetail]" value="<%= data.aircraft.model.text %>" required>
       </div>
 
       <div class="input-group input-group-small mb-2">
         <div class="input-group-prepend">
           <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Departure</span>
         </div>
-        <input type="date" class="form-control" name="order[details][departureDate]" value="<%= departure.date %>">
-        <input type="time" class="form-control" name="order[details][departureTime]" value="<%= departure.time %>">
+        <input type="date" class="form-control" name="order[details][departureDate]" value="<%= departure.date %>" required>
+        <input type="time" class="form-control" name="order[details][departureTime]" value="<%= departure.time %>" required>
       </div>
 
       <div class="input-group input-group-small mb-2">
         <div class="input-group-prepend">
           <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Arrival</span>
         </div>
-        <input type="date" class="form-control" name="order[details][arrivalDate]" value="<%= arrival.date %>">
-        <input type="time" class="form-control" name="order[details][arrivalTime]" value="<%= arrival.time %>">
+        <input type="date" class="form-control" name="order[details][arrivalDate]" value="<%= arrival.date %>" required>
+        <input type="time" class="form-control" name="order[details][arrivalTime]" value="<%= arrival.time %>" required>
       </div>
 
       <div class="input-group input-group-lsmallg mb-2">
         <div class="input-group-prepend">
           <span class="input-group-text" style="width:200px" id="inputGroup-sizing-lg">Date</span>
         </div>
-        <input type="date" class="form-control" name="order[date]" value="<%= today.date %>">
+        <input type="date" class="form-control" name="order[date]" value="<%= today.date %>" required>
       </div>
 
       <div class="input-group input-group-small mb-2">
         <div class="input-group-prepend">
           <span class="input-group-text" style="width:300px" id="inputGroup-sizing-lg">First Class (FC)</span>
         </div>
-        <input type="number" class="form-control" name="order[fc]">
+        <input type="number" class="form-control" name="order[fc]" required>
+        <div class="invalid-tooltip"> Input order </div>
+        
       </div>
 
       <div class="input-group input-group-small mb-2">
         <div class="input-group-prepend">
           <span class="input-group-text" style="width:300px" id="inputGroup-sizing-lg">Business Class (BC)</span>
         </div>
-        <input type="number" class="form-control" name="order[bc]">
+        <input type="number" class="form-control" name="order[bc]" required>
+        <div class="invalid-tooltip"> Input order </div>
       </div>
 
       <div class="input-group input-group-small mb-2">
         <div class="input-group-prepend">
           <span class="input-group-text" style="width:300px" id="inputGroup-sizing-lg">P-Economy Class (PEY)</span>
         </div>
-        <input type="number" class="form-control" name="order[pey]">
+        <input type="number" class="form-control" name="order[pey]" required>
+        <div class="invalid-tooltip"> Input order </div>
       </div>
 
       <div class="input-group input-group-small mb-2">
         <div class="input-group-prepend">
           <span class="input-group-text" style="width:300px" id="inputGroup-sizing-lg">Economy Class (EY)</span>
         </div>
-        <input type="number" class="form-control" name="order[ey]">
+        <input type="number" class="form-control" name="order[ey]" required>
+        <div class="invalid-tooltip"> Input order </div>
       </div>
 
       <p></p>
       <div><button class="btn btn-dark p-3 container-fluid">SUBMIT DATA</button></div>
 
     </form>
-
-
-
+    
   </div>
 
   <!--  from here, right side of screen -->
@@ -105,7 +108,29 @@
 
       </div>
     </div>
-
   </div>
-
 </div>
+
+
+<script>
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+  (function() {
+    'use strict'
+
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.needs-validation')
+
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+      .forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+</script>
