@@ -1,95 +1,110 @@
 <% layout('boilerPlate') -%>
 
-<div class="container-fluid d-flex justify-content-center">
+<div class="container-fluid w-75">
+  <div class="row justify-content-md-center">
 
-  <!-- left page -->
-  <div class="col-6">
+    <!-- left page -->
+    <div class="col-lg-7">
+      <!-- the below content not fitting in this area -->
 
-    <h1>Airline Search Page</h1><br>
-
-    <div>
-      <form action="/main/airlineSearch" method="GET">
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">Flight</span>
+      <div class="mb-10">
+        <h1>Airline Search Page</h1><br>
+        <form action="/main/airlineSearch" method="GET">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">Flight</span>
+            </div>
+            <input type="text" class="form-control" name="searchData" placeholder="Search Airline Name or Code such as 'OZ','SQ'">
+            <button class="btn btn-dark">Search</button>
           </div>
-          <input type="text" class="form-control" name="searchData" placeholder="Search Airline Name or Code such as 'OZ','SQ'">
-          <button class="btn btn-dark">Search</button>
-        </div>
-      </form>
-    </div>
-
-    <br><br>
-
-    <% if(filteredData !== '') { %>
-
-    <table class="table">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Airline</th>
-          <th scope="col">Code</th>
-          <th scope="col">ICAO</th>
-          <th scope="col">Airline Master</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% if(filteredData=='') { %>
-        <tr>
-          <th scope="row">None</th>
-          <td>None</td>
-          <td>None</td>
-          <td>None</td>
-          <td>None</td>
-        </tr>
-        <% } %>
-
-        <% let i=1 %>
-        <% for(data of filteredData) { %>
-        <tr>
-          <form action="/main/airlineSearch" method="POST">
-            <th scope="row"><%=i++%></th>
-            <td><input type="text" name="data[airline]" value="<%=data.Name%>" readonly style="border:none"></td>
-            <td><input type="text" name="data[code]" value="<%=data.Code%>" readonly style="border:none"></td>
-            <td><input type="text" name="data[icao]" value="<%=data.ICAO%>" readonly style="border:none"></td>
-            <td>
-              <button class='btn btn-success'>Add</button>
-          </form>
-          </td>
-        </tr>
-        <% } %>
-      </tbody>
-    </table>
-    <% } else { %>
-    <div class="d-flex justify-content-center"><img src="https://cdn-icons-png.flaticon.com/512/655/655851.png" class="w-50"></div>
-    <% } %>
-    <a href="/main">Back to main</a>
-
-  </div>
-
-  <!-- right page -->
-  <div class="col-4">
-    <h1>Airline List (DB)</h1><br>
-    <div class="mb-3">The airlines below are saved in the Master Data Base.</div>
-
-    <% for(airline of airlineList) { %>
-    <div class="card mb-3" style="">
-      <div class="row no-gutters">
-        <div class="col-md-4 d-flex align-self-center justify-content-center">
-          <img src="<%=airline.logo%>" alt="logo_img">
-        </div>
-        <div class="col-md-8">
-          <div class="card-body">
-            <h5 class="card-title"><%=airline.airline%></h5>
-            <p class="card-text"><b>ICAO:</b> <%=airline.icao%> / <b>CODE:</b> <%=airline.code%></p>
-          </div>
-        </div>
+        </form>
       </div>
+
+      <div>
+        <!-- Table starts here -->
+        <% if(filteredData !== '') { %>
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Airline</th>
+              <th scope="col">Code</th>
+              <th scope="col">ICAO</th>
+              <th scope="col">Airline Master</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if(filteredData=='') { %>
+            <tr>
+              <th scope="row">None</th>
+              <td>None</td>
+              <td>None</td>
+              <td>None</td>
+              <td>None</td>
+            </tr>
+            <% } %>
+
+            <% let i=1 %>
+            <% for(data of filteredData) { %>
+            <tr>
+              <form action="/main/airlineSearch" method="POST">
+                <th scope="row"><%=i++%></th>
+                <td><input type="text" name="data[airline]" value="<%=data.Name%>" readonly style="border:none"></td>
+                <td><input type="text" name="data[code]" value="<%=data.Code%>" readonly style="border:none"></td>
+                <td><input type="text" name="data[icao]" value="<%=data.ICAO%>" readonly style="border:none"></td>
+                <td>
+                  <button class='btn btn-success'>Add</button>
+              </form>
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+        <% } else { %>
+        <div class="d-flex justify-content-center"><img src="https://cdn-icons-png.flaticon.com/512/655/655851.png" class="w-50"></div>
+        <% } %>
+        <a href="/main">Back to main</a>
+        <!-- Table ends here -->
+      </div>
+
     </div>
 
-    <% } %>
+    <!-- right page -->
+    <div class="col-lg-5">
+      <div class="mb-3">
+        <h1>Airline List (DB)</h1>
+      </div>
+      <div class="mb-3">
+        The airlines below are saved in the Master Data Base.
+      </div>
 
+
+      <div class="row row-col justify-content-center">
+        <% for(airline of airlineList) { %>
+
+
+        <div class="card mb-3 p-3" style="width:180px">
+          <div>
+            <div style="height:42px">
+              <img src="<%=airline.logo%>" class="" alt="logo_img"> <!-- img size fluid..? -->
+            </div>
+            <div>
+              <h5><%=airline.airline%></h5>
+              <b>ICAO:</b> <%=airline.icao%>
+              <br> <b>CODE:</b> <%=airline.code%>
+            </div>
+          </div>
+        </div>
+
+
+        <% } %>
+
+      </div>
+
+
+
+
+    </div>
 
   </div>
-
 </div>

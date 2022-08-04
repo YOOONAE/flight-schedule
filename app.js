@@ -18,6 +18,14 @@ const sessionConfig = {
 };
 app.use(session(sessionConfig));
 
+// Require Flash
+const flash = require('connect-flash');
+app.use(flash()); // Flash must be after Session. Session comes first and Flash comes next.
+
+//Bcrypt
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 
 //mongo DB models
 const mongoose = require('mongoose');
@@ -33,7 +41,8 @@ app.use(express.urlencoded({ extended: true }))
 
 // Routing setting
 const mainRouter = require('./routes/mainRouter');
-const { search } = require('./routes/mainRouter');
+const userRouter = require('./routes/userRouter');
+// const { search } = require('./routes/mainRouter');
 
 //Connect Mongoose to Express
 main().catch(err => console.log(err)); //Hoisting? if error happens in connecting mongo DB, it will show you an error msg
@@ -43,11 +52,22 @@ async function main() {
 }
 
 app.use((req, res, next) => {
+    res.locals.success = req.flash('success');
+    res.locals.fail = req.flash('fail');
+    res.locals.info = req.flash('info');
+    res.locals.isloggedIn = req.session.loggedIn;
+    res.locals.currentUser = req.session.currentUser;
     next();
 })
 
+
+//login, signup route
+app.use('/user', userRouter);
+
+
 // Go to main route that has search, search/orderinputdetail, dashboard, and etc.
 app.use('/main', mainRouter);
+
 
 
 // Custom Error Handler (it runs first and it passes err value to the Express dafault handler, or you can stop it here by showing your own err screen)
@@ -57,6 +77,10 @@ app.use((err, req, res, next) => {
     // res.send('Hey, you have an error! but I catched it for you :) '); // // "res.send" not handled by custom error handler, passed to Express Default Error Handler
     // res.status(500).send(err); // not handled by custom error handler, passed to Express Default Error Handler
     // next(err); // not handled by custom error handler, passed to Express Default Error Handler
+    console.log('-----------------')
+    console.log(err);
+    console.log('-----------------')
+
     res.render('error', { err });
 });
 

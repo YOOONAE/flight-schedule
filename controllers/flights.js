@@ -10,6 +10,11 @@ const title = require('../utils/title');
 module.exports.airlineListGet = async function (req, res) {
     title('main/airlineSearch (GET) route');
 
+    console.log('res.locals.currentUser!!')
+    console.log(res.locals.currentUser);
+    console.log('------ currentUser!! -----')
+
+
     const { searchData } = req.query;
     let filteredData = '';
 

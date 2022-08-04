@@ -24,3 +24,11 @@ div.invalid-tooltip {
     position: relative;
     left: 20px;
 }
+
+#loginImg {
+    object-fit: cover;
+}
+
+table {
+    
+}

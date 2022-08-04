@@ -1,6 +1,7 @@
-<% layout('boilerPlate') -%>
+<%- layout('boilerPlate') %>
 
 <div class="container">
+  <%- include('partials/flashMsg') %>
 
   <h1>Today's Flight Schedule</h1><br>
 
@@ -70,7 +71,8 @@
         <td><%=data.details.arrivalTime%></td>
         <td><%=data.details.departureTime%></td>
         <td>
-          <form action="/main/dashboard/orderEdit/<%=data.id%>"> <!-- data.id means the id from db.orders -->
+          <form action="/main/dashboard/orderEdit/<%=data.id%>">
+            <!-- data.id means the id from db.orders -->
             <button class='btn btn-success'>Update</button> <!-- Go to data.id route.. and edit     -->
           </form>
         </td>
